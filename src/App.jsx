@@ -21,6 +21,7 @@ const LON = 30.645106
 
 export default function App() {
   const viewerRef = useRef(null)
+  const [showFly, setShowFly] = useState(false);
 
   const handleClick = (movement) => {
     const viewer = viewerRef.current?.cesiumElement
@@ -36,6 +37,15 @@ export default function App() {
 
     console.log(`${lon.toFixed(6)}, ${lat.toFixed(6)}, 0`)
   }
+
+  useEffect(() => {
+    // ➊ 3 saniye sonra showFly = true olacak
+    const timer = setTimeout(() => {
+      setShowFly(true)
+    }, 2000)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
     <>
@@ -62,7 +72,7 @@ export default function App() {
         </ScreenSpaceEventHandler>
 
 
-        <CameraFlyTo
+        {showFly && <CameraFlyTo
           duration={3}  // uçuş 3 saniyede tamamlanır
           destination={Cesium.Cartesian3.fromDegrees(30.644446134133467 + 0.001, 39.73940053627171 + 0.003, 1000)}
           orientation={{
@@ -70,7 +80,7 @@ export default function App() {
             pitch: Cesium.Math.toRadians(-30),      // tam dik aşağı
             roll: 0
           }}
-        />
+        />}
 
         <Entity
           id="silo1"
